@@ -9,7 +9,7 @@ import Board from "./Components/Board";
 const Wrapper = styled.div`
     display: flex;
     max-width: 480px;
-    width: 100%;
+    width: 100vw;
     margin: 0 auto;
     justify-content: center;
     align-items: center;
@@ -17,7 +17,9 @@ const Wrapper = styled.div`
 `;
 
 const Boards = styled.div`
-    display: grid;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
     width: 100%;
     gap:10px;
     grid-template-columns: repeat(3, 1fr);
@@ -25,16 +27,37 @@ const Boards = styled.div`
 
 function App() {
     const [toDos, setToDos] = useRecoilState(toDoState);
-    const onDragEnd = ({draggableId, destination, source}: DropResult) => {
-        if (!destination) return;
-        // setToDos((oldToDos) => {
-        //     const toDosCopy = [...oldToDos];
-        //     // 1) Delete item on source.index
-        //     toDosCopy.splice(source.index, 1);
-        //     // 2) Put back the item on the destination.index
-        //     toDosCopy.splice(destination?.index, 0, draggableId);
-        //     return toDosCopy;
-        // });
+    const onDragEnd = (info: DropResult) => {
+        console.log(info);
+        const { destination, draggableId, source } = info;
+        // when there is no destination just return
+        if(!destination) return;
+        // same board movement.
+        if (destination?.droppableId === source.droppableId) {
+            setToDos((allBoards) => {
+                const boardCopy = [...allBoards[source.droppableId]];
+                boardCopy.splice(source.index, 1);
+                boardCopy.splice(destination?.index, 0, draggableId);
+                return {
+                    ...allBoards,
+                    [source.droppableId]: boardCopy,
+                };
+            });
+        }
+        //different board movement
+        if(destination.droppableId !== source.droppableId){
+            setToDos((allBoards)=>{
+                const sourceBoard = [...allBoards[source.droppableId]];
+                const targetBoard = [...allBoards[destination.droppableId]];
+                sourceBoard.splice(source.index,1);
+                targetBoard.splice(destination?.index,0,draggableId);
+                return{
+                    ...allBoards,
+                    [source.droppableId]:sourceBoard,
+                    [destination.droppableId]:targetBoard,
+                }
+            })
+        };
     };
     return (
         <DragDropContext onDragEnd={onDragEnd}>
