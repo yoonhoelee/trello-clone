@@ -3,7 +3,6 @@ import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful
 import styled from "styled-components";
 import {useRecoilState} from "recoil";
 import {toDoState} from "./atoms";
-import DraggableCard from "./Components/DraggableCard";
 import Board from "./Components/Board";
 
 const Wrapper = styled.div`
