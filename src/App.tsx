@@ -49,7 +49,7 @@ function App() {
                 const sourceBoard = [...allBoards[source.droppableId]];
                 const targetBoard = [...allBoards[destination.droppableId]];
                 sourceBoard.splice(source.index,1);
-                targetBoard.splice(destination?.index,0,draggableId);
+                targetBoard.splice(destination?.index, 0, draggableId);
                 return{
                     ...allBoards,
                     [source.droppableId]:sourceBoard,
